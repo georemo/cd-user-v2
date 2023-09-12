@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../horizontal/horizontal.component.scss"
+    ],
+    "names": [],
+    "file": "horizontal.component.min.css"
+}

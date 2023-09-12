@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../pagetitle/pagetitle.component.scss"
+    ],
+    "names": [],
+    "file": "pagetitle.component.min.css"
+}

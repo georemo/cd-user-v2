@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../signup/signup.component.scss"
+    ],
+    "names": [],
+    "file": "signup.component.min.css"
+}

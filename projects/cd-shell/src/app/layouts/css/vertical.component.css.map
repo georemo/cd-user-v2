@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../vertical/vertical.component.scss"
+    ],
+    "names": [],
+    "file": "vertical.component.css"
+}

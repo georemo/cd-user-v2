@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../topbar/topbar.component.scss"
+    ],
+    "names": [],
+    "file": "topbar.component.min.css"
+}

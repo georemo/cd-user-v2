@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../rightsidebar/rightsidebar.component.scss"
+    ],
+    "names": [],
+    "file": "rightsidebar.component.min.css"
+}

@@ -1,0 +1,35 @@
+//
+// plugins-rtl.scss
+//
+
+// rdw-editor
+
+.rdw-dropdown-carettoclose,
+.rdw-dropdown-carettoopen {
+  right: auto;
+  left: 10%;
+}
+
+// form wizard
+
+.wizard {
+  .steps {
+    .number {
+      margin-right: 0;
+      margin-left: 0.5rem;
+    }
+  }
+}
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-origin {
+  right: 0;
+  left: auto;
+}
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-handle {
+  right: -17px;
+  left: auto;
+}
+.twitter-bs-wizard .twitter-bs-wizard-pager-link{
+  display: block;
+  text-align: left;
+  padding-right: 0; 
+}

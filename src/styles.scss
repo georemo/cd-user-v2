@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap';
+
+.ecommerce button.collapsed::after {
+    content: "\f0415";
+    top: 50%;
+}
+
+.ecommerce button::after {
+    content: "\f0374";
+    display: block;
+    font-family: "Material Design Icons";
+    font-size: 16px;
+    position: absolute;
+    right: 20px;
+    font-weight: 500;
+    top: 30%;
+    background-image: none;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: none;
+}

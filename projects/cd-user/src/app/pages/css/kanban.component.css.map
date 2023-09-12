@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "../kanban/kanban.component.scss"
+    ],
+    "names": [],
+    "file": "kanban.component.css"
+}
