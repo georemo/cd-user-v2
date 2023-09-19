@@ -7,6 +7,8 @@ module.exports = withModuleFederationPlugin({
   exposes: {
     './Component': './projects/cd-user/src/app/app.component.ts',
     './PagesModule': './projects/cd-user/src/app/pages/pages.module.ts',
+    './LoginComponent': './projects/cd-user/src/app/account/auth/login/login.component.ts',
+    './UserFrontModule': './projects/cd-user/src/app/modules/user/user-front.module.ts',
   },
 
   shared: {

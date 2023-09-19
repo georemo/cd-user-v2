@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve cd-user",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "protractor"
+    "e2e": "protractor",
+    "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +27,8 @@
     "@asymmetrik/ngx-leaflet": "^15.0.1",
     "@ckeditor/ckeditor5-angular": "^7.0.0",
     "@ckeditor/ckeditor5-build-classic": "^38.1.1",
+    "@corpdesk/core": "^0.1.13",
+    "@corpdesk/naz": "^0.1.13",
     "@fullcalendar/angular": "^6.1.8",
     "@fullcalendar/bootstrap": "^6.1.8",
     "@fullcalendar/core": "^6.1.8",
@@ -47,10 +50,12 @@
     "echarts": "^5.4.1",
     "firebase": "^10.0.0",
     "fullcalendar": "^6.1.8",
+    "fuzzy-search": "^3.2.1",
     "leaflet": "^1.9.4",
     "metismenujs": "^1.4.0",
     "ng-apexcharts": "^1.8.0",
     "ng-click-outside": "^6.0.0",
+    "ng-toggle-button": "^1.5.2",
     "ng2-charts": "^4.1.1",
     "ng2-search-filter": "^0.5.1",
     "ngx-color-picker": "^14.0.0",
@@ -62,6 +67,7 @@
     "ngx-perfect-scrollbar": "^10.1.1",
     "ngx-ui-switch": "^14.0.3",
     "rxjs": "~7.8.0",
+    "socket.io-client": "^4.7.2",
     "sweetalert2": "^11.7.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.12.0"
@@ -92,6 +98,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.3",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
+    "ngx-build-plus": "^15.0.0",
     "protractor": "^7.0.0",
     "ts-node": "~10.9.1",
     "tslint": "~6.1.3",
