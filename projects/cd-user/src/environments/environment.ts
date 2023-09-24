@@ -9,7 +9,7 @@ export const environment: EnvConfig = {
   production: false,
   apiEndpoint: 'http://localhost:3001',
   // apiEndpoint: 'http://cd-api-22:3001',
-  sioEndpoint: 'http://localhost:3001',
+  sioEndpoint: 'http://localhost:3002',
   // sioEndpoint: 'http://cd-sio-23:3000',
   wsEndpoint: 'ws://cd-sio-23:3000',
   CD_PORT: 3001,

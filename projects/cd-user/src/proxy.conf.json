@@ -1,0 +1,27 @@
+{
+    "/": {
+        "target": "http://localhost:3001",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/": {
+        "target": "http://localhost:3002",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/": {
+        "target": "http://cd-api-22:3001",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/ws": {
+        "target": "http://cd-sio-23:3000",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/p-reg": {
+        "target": "http://cd-sio-23:3000",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}
