@@ -327,7 +327,7 @@
 					"options": {
 						"proxyConfig": "projects/cd-user/src/proxy.conf.json",
 						"port": 4407,
-						"publicHost": "http://localhost:4407",
+						"publicHost": "http://cd-user-25:4407",
 						"extraWebpackConfig": "projects/cd-user/webpack.config.js"
 					}
 				},
