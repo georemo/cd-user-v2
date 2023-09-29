@@ -1,14 +1,33 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute, Router,
+  Event as NavigationEvent,
+  /**
+   * router events
+   */
+  NavigationStart, //	the Angular router stats the navigation.
+  RouteConfigLoadStart, //	the Router lazy loads a route configuration.
+  RouteConfigLoadEnd, //	after a route has been lazy-loaded.
+  RoutesRecognized, //	the Router parses the URL and the routes are recognized.
+  GuardsCheckStart, //	the Router begins the Guards phase of routing.
+  ChildActivationStart, //	the Router begins activating a route's children.
+  ActivationStart, //	the Router begins activating a route.
+  GuardsCheckEnd, //	the Router finishes the Guards phase of routing successfully.
+  ResolveStart, //	the Router begins the Resolve phase of routing.
+  ResolveEnd, //	the Router finishes the Resolve phase of routing successfully.
+  ChildActivationEnd, //	the Router finishes activating a route's children.
+  ActivationEnd, //	the Router finishes activating a route. 
+} from '@angular/router';
 import {
   UserService, AuthData, SessService, MenuService, NavService, SioClientService, ICommConversationSub,
-  BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem
+  BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem, AclService
 } from '@corpdesk/core';
 import { environment } from '../../../../environments/environment';
+import { NazTableService } from '@corpdesk/naz';
 // import { SioClientService } from '../../../core/services/sio-client.service';
-interface IInitData{
+interface IInitData {
   key: string;
   value: CdObjId;
 }
@@ -40,8 +59,11 @@ export class LoginComponent implements OnInit {
     private svUser: UserService,
     private svSess: SessService,
     private svMenu: MenuService,
+    private aRoute: ActivatedRoute,
+    private svNazTable: NazTableService,
+    private svAcl: AclService,
+    private router: Router,
     private svNav: NavService,
-    private route: Router,
     private svBase: BaseService,
   ) {
     this.svSio.env = environment;
@@ -54,6 +76,89 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.aRoute.queryParams
+      .subscribe(params => {
+        if (params) {
+          this.svAcl.initComponent(params, this, this.svSess).then((ret) => {
+            if (ret) {
+              // this.sQuery = this.svNazTable.initSQuery(this);
+              // this.dsEmittData = this.svNazTable.initEmittData(this);
+            } else {
+              this.svNav.nsNavigate(this, '/', 'Error loading ModuleList page')
+            }
+          });
+        }
+      });
+
+    /**
+     * listen to router events
+     */
+    this.router.events
+      .subscribe(
+        (event: NavigationEvent) => {
+          // NavigationStart, //	the Angular router stats the navigation.
+          if (event instanceof NavigationStart) {
+            console.log('ListComponent::ngOnInit()/router event: Description: the Angular router stats the navigation');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: NavigationEvent:', event);
+          }
+          // RouteConfigLoadStart, //	the Router lazy loads a route configuration.
+          if (event instanceof RouteConfigLoadStart) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router lazy loads a route configuration');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RouteConfigLoadStart:', event);
+          }
+          // RouteConfigLoadEnd, //	after a route has been lazy-loaded.
+          if (event instanceof RouteConfigLoadEnd) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: after a route has been lazy-loaded.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RouteConfigLoadEnd:', event);
+          }
+          // RoutesRecognized, //	the Router parses the URL and the routes are recognized.
+          if (event instanceof RoutesRecognized) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RoutesRecognized:', event);
+          }
+          // GuardsCheckStart, //	the Router begins the Guards phase of routing.
+          if (event instanceof GuardsCheckStart) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins the Guards phase of routing.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: GuardsCheckStart:', event);
+          }
+          // ChildActivationStart, //	the Router begins activating a route's children.
+          if (event instanceof ChildActivationStart) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins activating a routes children.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ChildActivationStart:', event);
+          }
+          // ActivationStart, //	the Router begins activating a route.
+          if (event instanceof ActivationStart) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins activating a route.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ActivationStart:', event);
+          }
+          // GuardsCheckEnd, //	the Router finishes the Guards phase of routing successfully.
+          if (event instanceof GuardsCheckEnd) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes the Guards phase of routing successfully.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: GuardsCheckEnd:', event);
+          }
+          // ResolveStart, //	the Router begins the Resolve phase of routing.
+          if (event instanceof ResolveStart) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ResolveStart:', event);
+          }
+          // ResolveEnd, //	the Router finishes the Resolve phase of routing successfully.
+          if (event instanceof ResolveEnd) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes the Resolve phase of routing successfully.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ResolveEnd:', event);
+          }
+          // ChildActivationEnd, //	the Router finishes activating a route's children.
+          if (event instanceof ChildActivationEnd) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes activating a routes children.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ChildActivationEnd:', event);
+          }
+          // ActivationEnd, //	the Router finishes activating a route. 
+          if (event instanceof ActivationEnd) {
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes activating a route.');
+            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ActivationEnd:', event);
+          }
+
+        });
+
     console.log('cd-user-v2::LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
     const filter: LsFilter = {
       storageType: StorageType.CdObjId,
@@ -66,6 +171,7 @@ export class LoginComponent implements OnInit {
         socket: null,
         commTrack: null
       }
+
     }
     console.log('cd-user-v2::LoginComponent::ngOnInit()/filter:', filter);
     // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
@@ -85,6 +191,8 @@ export class LoginComponent implements OnInit {
     } else {
       console.log('Err: socket data is not valid')
     }
+
+
 
   }
 
@@ -141,7 +249,7 @@ export class LoginComponent implements OnInit {
             replaceUrl: false
           };
           // below: old method
-          this.route.navigate(['/comm'], params);
+          this.router.navigate(['/comm'], params);
 
           // below new method based on this.baseModel;
           // this.svNav.nsNavigate(this,'/comm','message from cd-user')
