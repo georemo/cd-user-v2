@@ -104,6 +104,7 @@ export class LoginComponent implements OnInit {
           // NavigationStart, //	the Angular router stats the navigation.
           if (event instanceof NavigationStart) {
             console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Angular router stats the navigation');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/this.baseModel.token:', this.baseModel.token);
             console.log('cdUserV2::LoginComponent::ngOnInit()/router event: NavigationEvent:', event);
           }
           // RouteConfigLoadStart, //	the Router lazy loads a route configuration.
