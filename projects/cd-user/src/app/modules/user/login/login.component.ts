@@ -103,63 +103,63 @@ export class LoginComponent implements OnInit {
         (event: NavigationEvent) => {
           // NavigationStart, //	the Angular router stats the navigation.
           if (event instanceof NavigationStart) {
-            console.log('ListComponent::ngOnInit()/router event: Description: the Angular router stats the navigation');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: NavigationEvent:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Angular router stats the navigation');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: NavigationEvent:', event);
           }
           // RouteConfigLoadStart, //	the Router lazy loads a route configuration.
           if (event instanceof RouteConfigLoadStart) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router lazy loads a route configuration');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RouteConfigLoadStart:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router lazy loads a route configuration');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: RouteConfigLoadStart:', event);
           }
           // RouteConfigLoadEnd, //	after a route has been lazy-loaded.
           if (event instanceof RouteConfigLoadEnd) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: after a route has been lazy-loaded.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RouteConfigLoadEnd:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: after a route has been lazy-loaded.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: RouteConfigLoadEnd:', event);
           }
           // RoutesRecognized, //	the Router parses the URL and the routes are recognized.
           if (event instanceof RoutesRecognized) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: RoutesRecognized:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: RoutesRecognized:', event);
           }
           // GuardsCheckStart, //	the Router begins the Guards phase of routing.
           if (event instanceof GuardsCheckStart) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins the Guards phase of routing.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: GuardsCheckStart:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router begins the Guards phase of routing.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: GuardsCheckStart:', event);
           }
           // ChildActivationStart, //	the Router begins activating a route's children.
           if (event instanceof ChildActivationStart) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins activating a routes children.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ChildActivationStart:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router begins activating a routes children.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ChildActivationStart:', event);
           }
           // ActivationStart, //	the Router begins activating a route.
           if (event instanceof ActivationStart) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router begins activating a route.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ActivationStart:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router begins activating a route.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ActivationStart:', event);
           }
           // GuardsCheckEnd, //	the Router finishes the Guards phase of routing successfully.
           if (event instanceof GuardsCheckEnd) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes the Guards phase of routing successfully.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: GuardsCheckEnd:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router finishes the Guards phase of routing successfully.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: GuardsCheckEnd:', event);
           }
           // ResolveStart, //	the Router begins the Resolve phase of routing.
           if (event instanceof ResolveStart) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ResolveStart:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ResolveStart:', event);
           }
           // ResolveEnd, //	the Router finishes the Resolve phase of routing successfully.
           if (event instanceof ResolveEnd) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes the Resolve phase of routing successfully.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ResolveEnd:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router finishes the Resolve phase of routing successfully.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ResolveEnd:', event);
           }
           // ChildActivationEnd, //	the Router finishes activating a route's children.
           if (event instanceof ChildActivationEnd) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes activating a routes children.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ChildActivationEnd:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router finishes activating a routes children.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ChildActivationEnd:', event);
           }
           // ActivationEnd, //	the Router finishes activating a route. 
           if (event instanceof ActivationEnd) {
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: Description: the Router finishes activating a route.');
-            console.log('cd-ModulemanV2::Module/ListComponent::ngOnInit()/router event: ActivationEnd:', event);
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router finishes activating a route.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ActivationEnd:', event);
           }
 
         });
