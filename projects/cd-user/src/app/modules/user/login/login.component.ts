@@ -61,9 +61,9 @@ export class LoginComponent implements OnInit {
     private svUser: UserService,
     private svSess: SessService,
     private svMenu: MenuService,
-    private aRoute: ActivatedRoute,
     private svNazTable: NazTableService,
     private svAcl: AclService,
+    private route: ActivatedRoute,
     private router: Router,
     private svNav: NavService,
     private svBase: BaseService,
@@ -254,6 +254,7 @@ export class LoginComponent implements OnInit {
           console.log('user/LoginComponent::initSession/02');
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
+          envl.pushData.token = res.app_state.sess.cd_token;
           console.log('user/LoginComponent::initSession/envl:', envl);
           this.svSio.sendPayLoad(envl)
           ///////////////////////////////////////
