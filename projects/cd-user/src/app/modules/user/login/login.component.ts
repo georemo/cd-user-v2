@@ -32,6 +32,8 @@ interface IInitData {
   value: CdObjId;
 }
 
+let baseModel: any = null;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -95,7 +97,7 @@ export class LoginComponent implements OnInit {
     //     }
     //   });
 
-    const baseModel: any = this.baseModel;
+    baseModel = this.baseModel;
 
     /**
      * listen to router events
