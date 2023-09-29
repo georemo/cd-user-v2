@@ -76,19 +76,24 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.aRoute.queryParams
-      .subscribe(params => {
-        if (params) {
-          this.svAcl.initComponent(params, this, this.svSess).then((ret) => {
-            if (ret) {
-              // this.sQuery = this.svNazTable.initSQuery(this);
-              // this.dsEmittData = this.svNazTable.initEmittData(this);
-            } else {
-              this.svNav.nsNavigate(this, '/', 'Error loading ModuleList page')
-            }
-          });
-        }
-      });
+    /**
+     * login does not requre acl access
+     * therefore does not require 
+     * this.aRoute.queryParams
+     */
+    // this.aRoute.queryParams
+    //   .subscribe(params => {
+    //     if (params) {
+    //       this.svAcl.initComponent(params, this, this.svSess).then((ret) => {
+    //         if (ret) {
+    //           // this.sQuery = this.svNazTable.initSQuery(this);
+    //           // this.dsEmittData = this.svNazTable.initEmittData(this);
+    //         } else {
+    //           this.svNav.nsNavigate(this, '/', 'Error loading ModuleList page')
+    //         }
+    //       });
+    //     }
+    //   });
 
     /**
      * listen to router events
