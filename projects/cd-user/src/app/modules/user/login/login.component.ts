@@ -144,6 +144,7 @@ export class LoginComponent implements OnInit {
           // ResolveStart, //	the Router begins the Resolve phase of routing.
           if (event instanceof ResolveStart) {
             console.log('cdUserV2::LoginComponent::ngOnInit()/router event: Description: the Router parses the URL and the routes are recognized.');
+            console.log('cdUserV2::LoginComponent::ngOnInit()/this.baseModel.token:', this.baseModel.token);
             console.log('cdUserV2::LoginComponent::ngOnInit()/router event: ResolveStart:', event);
           }
           // ResolveEnd, //	the Router finishes the Resolve phase of routing successfully.
