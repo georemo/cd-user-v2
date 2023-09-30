@@ -378,7 +378,7 @@ export class LoginComponent implements OnInit {
     const lcArr = [];
 
     const lcLength = localStorage.length;
-    console.log('LoginComponent::searchLocalStorage()/lcLength:', lcLength);
+    // console.log('LoginComponent::searchLocalStorage()/lcLength:', lcLength);
     let i = 0;
     for (let i = 0; i < localStorage.length; i++) {
       // try {
@@ -389,26 +389,26 @@ export class LoginComponent implements OnInit {
       // console.log the iteration key and value
       console.log('Key: ' + k + ', Value: ' + v);
       try {
-        console.log('LoginComponent::searchLocalStorage()/1')
+        // console.log('LoginComponent::searchLocalStorage()/1')
         if (typeof (v) === 'object') {
-          console.log('LoginComponent::searchLocalStorage()/2')
-          console.log('LoginComponent::searchLocalStorage()/v:', v)
+          // console.log('LoginComponent::searchLocalStorage()/2')
+          // console.log('LoginComponent::searchLocalStorage()/v:', v)
           const lcItem = JSON.parse(v!);
           if ('success' in lcItem) {
-            console.log('LoginComponent::searchLocalStorage()/3')
+            // console.log('LoginComponent::searchLocalStorage()/3')
             const appState: IAppState = lcItem;
-            console.log('LoginComponent::searchLocalStorage()/appState:', appState)
+            // console.log('LoginComponent::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
-            console.log('LoginComponent::searchLocalStorage()/4')
+            // console.log('LoginComponent::searchLocalStorage()/4')
             const cdObjId = lcItem;
-            console.log('LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
+            // console.log('LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
           }
-          console.log('LoginComponent::searchLocalStorage()/5')
+          // console.log('LoginComponent::searchLocalStorage()/5')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          console.log('LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
-          console.log('LoginComponent::searchLocalStorage()/6')
+          // console.log('LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
+          // console.log('LoginComponent::searchLocalStorage()/6')
           lcArr.push({ key: k, value: JSON.parse(v) })
         }
 
@@ -420,7 +420,7 @@ export class LoginComponent implements OnInit {
 
     }
     console.log('LoginComponent::searchLocalStorage()/lcArr:', lcArr);
-    console.log('LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+    // console.log('LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
     // const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;
@@ -431,11 +431,11 @@ export class LoginComponent implements OnInit {
     let ret: any = null;
     try {
       if (this.debug) {
-        console.log('LoginComponent::searchLocalStorage()/debug=true:');
+        // console.log('LoginComponent::searchLocalStorage()/debug=true:');
         ret = lcArr
           .filter((d: any) => {
             if (typeof (d.value) === 'object') {
-              console.log('LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
+              // console.log('LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
               return d
             } else {
               return null;
@@ -443,18 +443,18 @@ export class LoginComponent implements OnInit {
           })
           .filter((d: any) => {
             if ('resourceName' in d.value) {
-              console.log('LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
+              // console.log('LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
               return d;
             } else {
               return null;
             }
           })
           .filter((d: any) => {
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d:', d);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
+            // console.log('LoginComponent::searchLocalStorage()/filteredByName: d:', d);
+            // console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
+            // console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+            // console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
+            // console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
             if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
               return d;
             } else {
@@ -463,20 +463,20 @@ export class LoginComponent implements OnInit {
           })
           .reduce(
             (prev = {}, current = {}) => {
-              console.log('LoginComponent::searchLocalStorage()/prev:', prev);
+              // console.log('LoginComponent::searchLocalStorage()/prev:', prev);
               console.log('LoginComponent::searchLocalStorage()/current:', current);
               return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
             }
           );
       } else {
-        console.log('LoginComponent::searchLocalStorage()/debug=false:');
+        // console.log('LoginComponent::searchLocalStorage()/debug=false:');
         ret = lcArr
           .filter(isObject)
           .filter(CdObjIdItems!)
           .filter(filtObjName!)
           .reduce(latestItem!)
       }
-      console.log('LoginComponent::searchLocalStorage()/ret:', ret);
+      // console.log('LoginComponent::searchLocalStorage()/ret:', ret);
     } catch (e) {
       console.log('Error:', e);
     }
