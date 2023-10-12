@@ -26,9 +26,9 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class UserRoutingModule {
-  constructor(private router: Router){
+  constructor(private router: Router) {
     router.events.subscribe((routeState) => {
-        console.log('CdUser::UserRoutingModule::constructor()/routeState:', routeState) 
+      // console.log('CdUser::UserRoutingModule::constructor()/routeState:', routeState) 
     });
   }
- }
+}
