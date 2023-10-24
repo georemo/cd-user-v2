@@ -15,7 +15,7 @@ export const environment: EnvConfig = {
   USER_RESOURCES: 'http://web-01/user-resources',
   apiHost: 'http://cd-api-01',
   sioHost: 'http://cd-api-01',
-  shellHost: 'http://cd-shell-24',
+  shellHost: 'http://cd-shell.io',
   consumer: '',
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
   clientAppId: 2, // this client application identifies itself to the server with this id
