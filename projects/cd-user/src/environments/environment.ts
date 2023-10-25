@@ -7,14 +7,14 @@ import { EnvConfig } from "@corpdesk/core";
 export const environment: EnvConfig = {
   appId: '',
   production: false,
-  apiEndpoint: 'http://cd-api-01:3001',
-  sioEndpoint: 'http://cd-api-01:3002',
+  apiEndpoint: 'http://routed-94:3001',
+  sioEndpoint: 'http://routed-94:3002',
   wsEndpoint: 'ws://cd-sio-01:3000',
   CD_PORT: 3001,
   consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
   USER_RESOURCES: 'http://web-01/user-resources',
-  apiHost: 'http://cd-api-01',
-  sioHost: 'http://cd-api-01',
+  apiHost: 'http://routed-94',
+  sioHost: 'http://routed-94',
   shellHost: 'http://cd-shell-24',
   consumer: '',
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
