@@ -3,12 +3,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  UserService, AuthData, SessService, MenuService, NavService, SioClientService, ICommConversationSub,
+  UserService, AuthData, SessService, MenuService, NavService, SioClientService, WebsocketService, ICommConversationSub,
   BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem
 } from '@corpdesk/core';
 import { environment } from '../../../../environments/environment';
 // import { SioClientService } from '../../../core/services/sio-client.service';
-interface IInitData{
+interface IInitData {
   key: string;
   value: CdObjId;
 }
@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private svSio: SioClientService,
+    private svWss: WebsocketService,
     private svUser: UserService,
     private svSess: SessService,
     private svMenu: MenuService,
@@ -126,7 +127,31 @@ export class LoginComponent implements OnInit {
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
           console.log('user/LoginComponent::initSession/envl:', envl);
-          this.svSio.sendPayLoad(envl)
+          if (environment.wsMode === 'sio') {
+            this.svSio.sendPayLoad(envl)
+          }
+
+          if (environment.wsMode === 'wss') {
+            // export interface ICdPushEnvelop {
+            //   pushData: {
+            //     appId?: string;
+            //     appSockets?: ISocketItem[];
+            //     pushGuid: string;
+            //     m?: string;
+            //     pushRecepients: ICommConversationSub[];
+            //     triggerEvent: string;
+            //     emittEvent: string;
+            //     token: string;
+            //     commTrack: CommTrack;
+            //     isNotification: boolean | null;
+            //     isAppInit?: boolean | null;
+            //   },
+            //   req: ICdRequest | null,
+            //   resp: ICdResponse | null
+            // };
+            this.svWss.sendMsg(envl)
+          }
+
           ///////////////////////////////////////
           this.svSess.createSess(res, this.svMenu);
           this.svUser.currentUser = { name: `${res.data.userData.userName}`, picture: `${environment.shellHost}/user-resources/${res.data.userData.userGuid}/avatar-01/a.jpg` };

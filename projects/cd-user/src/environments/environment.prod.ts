@@ -7,7 +7,7 @@ import { EnvConfig } from "@corpdesk/core";
 export const environment: EnvConfig = {
   appId: '',
   production: true,
-  // apiEndpoint: 'http://localhost/cdapi/public/api/cd',
+  // apiEndpoint: 'http://192.168.0.12/cdapi/public/api/cd',
   apiEndpoint: 'http://cd-api-22:3001',
   sioEndpoint: 'http://cd-sio-23:3000',
   wsEndpoint: 'ws://cd-sio-23:3000',
@@ -21,7 +21,20 @@ export const environment: EnvConfig = {
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
   clientAppId: 2, // this client application identifies itself to the server with this id
   SOCKET_IO_PORT: 3000, // push server port
-  defaultauth: 'fackbackend',
+  defaultauth: 'cd-auth',
+  mfManifestPath: '/assets/mf.manifest.json',
+  apiOptions: {
+    headers: {'Content-Type': 'application/json'}
+  },
+  sioOptions: {
+    secure: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    timeout: 20000,
+    transports: ['websocket'],
+    rejectUnauthorized: false,  // Adjust based on your security requirements
+  },
   firebaseConfig: {
     apiKey: '',
     authDomain: '',

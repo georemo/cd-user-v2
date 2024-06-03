@@ -1,11 +1,11 @@
 {
     "/": {
-        "target": "http://cd-api-22:3001",
+        "target": "https://cd-api.co.ke/api",
         "secure": false,
         "logLevel": "debug"
     },
     "/": {
-        "target": "http://cd-sio-23:3002",
+        "target": "https://cd-api.co.ke:3002/sio",
         "secure": false,
         "logLevel": "debug"
     }

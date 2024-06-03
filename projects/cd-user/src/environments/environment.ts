@@ -7,20 +7,36 @@ import { EnvConfig } from "@corpdesk/core";
 export const environment: EnvConfig = {
   appId: '',
   production: false,
-  apiEndpoint: 'http://cd-api-22:3001',
-  sioEndpoint: 'http://cd-sio-23:3002',
-  wsEndpoint: 'ws://cd-sio-23:3000',
-  CD_PORT: 3001,
+  apiEndpoint: 'https://cd-api.co.ke/api',
+  sioEndpoint: 'https://cd-api.co.ke:3002/sio',
+  wsEndpoint: 'ws://cd-api.co.ke:3000',
+  wsMode: 'sio',
+  CD_PORT: 443,
   consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
-  USER_RESOURCES: 'http://web-01/user-resources',
-  apiHost: 'http://cd-api-22',
-  sioHost: 'http://cd-sio-23',
-  shellHost: 'http://cd-shell-24',
+  USER_RESOURCES: 'http://routed-93/user-resources',
+  apiHost: 'https://cd-api.co.ke',
+  sioHost: 'https://cd-api.co.ke',
+  shellHost: 'https://cd-shell.asdap.africa',
   consumer: '',
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
   clientAppId: 2, // this client application identifies itself to the server with this id
-  SOCKET_IO_PORT: 3002, // push server port
-  defaultauth: 'fackbackend',
+  SOCKET_IO_PORT: 443, // push server port
+  defaultauth: 'cd-auth',
+  mfManifestPath: '/assets/mf.manifest.json',
+  apiOptions: {
+    headers: {'Content-Type': 'application/json'}
+  },
+  sioOptions: {
+    path: '/socket.io',
+    transports: ['websocket', 'polling'],
+    secure: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
+    timeout: 20000,
+    // transports: ['websocket'],
+    rejectUnauthorized: false,  // Adjust based on your security requirements
+  },
   firebaseConfig: {
     apiKey: '',
     authDomain: '',

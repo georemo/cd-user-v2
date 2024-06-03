@@ -1,4 +1,4 @@
-// Test route: http://localhost:4402/moduleman/module/create
+// Test route: http://192.168.0.12:4402/moduleman/module/create
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
