@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbNavModule, NgbDropdownModule, NgbTooltipModule, 
   NgbAccordionModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
@@ -36,6 +37,11 @@ import { ListComponent } from './list/list.component';
     CommonModule,
     UserRoutingModule,
     FormsModule, ReactiveFormsModule,
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      serverLoggingUrl: '/api/logs' // URL to your server-side logging endpoint
+    }),
     NgbNavModule, NgbDropdownModule, NgbTooltipModule, NgbAccordionModule,
     NazUiModule, NazTableModule, NazCreateModule, NazEditModule, NazDeleteModule, NgbAlertModule,
     Ng2SearchPipeModule,

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
 import {
   UserService, AuthData, SessService, MenuService, NavService, SioClientService, WebsocketService, ICommConversationSub,
   BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
   socketData: ISocketItem[] | null = [];
 
   constructor(
+    private logger: NGXLogger,
     private svSio: SioClientService,
     private svWss: WebsocketService,
     private svUser: UserService,
@@ -55,7 +57,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('cd-user-v2::LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
+    this.logger.info('cd-user-v2::LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
+    // this.logger.debug('AppComponent initialized');
+    
     const filter: LsFilter = {
       storageType: StorageType.CdObjId,
       cdObjId: {
@@ -68,10 +72,10 @@ export class LoginComponent implements OnInit {
         commTrack: null
       }
     }
-    console.log('cd-user-v2::LoginComponent::ngOnInit()/filter:', filter);
+    this.logger.info('cd-user-v2::LoginComponent::ngOnInit()/filter:', filter);
     // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
     this.sidebarInitData = this.searchLocalStorage(filter);
-    console.log('user/LoginComponent::ngOnInit()/this.sidebarInitData:', this.sidebarInitData);
+    this.logger.info('user/LoginComponent::ngOnInit()/this.sidebarInitData:', this.sidebarInitData);
     const socketDataStr = localStorage.getItem('socketData')
     if (socketDataStr) {
       this.socketData = JSON.parse(socketDataStr).filter(appInit)
@@ -82,9 +86,9 @@ export class LoginComponent implements OnInit {
           return null;
         }
       }
-      console.log('user/LoginComponent::ngOnInit()/this.socketData:', this.socketData);
+      this.logger.info('user/LoginComponent::ngOnInit()/this.socketData:', this.socketData);
     } else {
-      console.log('Err: socket data is not valid')
+      this.logger.info('Err: socket data is not valid')
     }
 
   }
@@ -92,30 +96,30 @@ export class LoginComponent implements OnInit {
   login(fg: any) {
     let authData: AuthData = fg.value;
     const valid = fg.valid;
-    console.log('user/LoginComponent::login/01');
-    console.log('user/LoginComponent::login/fg:', fg);
-    console.log('user/LoginComponent::login/valid:', valid);
+    this.logger.info('user/LoginComponent::login/01');
+    this.logger.info('user/LoginComponent::login/fg:', fg);
+    this.logger.info('user/LoginComponent::login/valid:', valid);
     this.submitted = true;
     const consumerGuid = { consumerGuid: environment.consumerToken };
     authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
     try {
-      console.log('user/LoginComponent::login/02');
+      this.logger.info('user/LoginComponent::login/02');
       if (valid) {
-        console.log('user/LoginComponent::login/03');
+        this.logger.info('user/LoginComponent::login/03');
         this.initSession(authData);
       }
     } catch (err) {
-      console.log('user/LoginComponent::login/04');
+      this.logger.info('user/LoginComponent::login/04');
       this.errMsg = "Something went wrong!!"
       this.loginInvalid = true;
     }
   }
 
   initSession(authData: AuthData) {
-    console.log('user/LoginComponent::initSession/01');
+    this.logger.info('user/LoginComponent::initSession/01');
     this.svUser.auth$(authData).subscribe((res: any) => {
       if (res.app_state.success === true) {
-        console.log('user/LoginComponent::initSession/res:', JSON.stringify(res));
+        this.logger.info('user/LoginComponent::initSession/res:', JSON.stringify(res));
         this.svSess.appState = res.app_state;
         /*
         create a session on successfull authentication.
@@ -123,32 +127,16 @@ export class LoginComponent implements OnInit {
         use renewSess(res);
         */
         if (res.app_state.sess.cd_token !== null && res.app_state.success) {
-          console.log('user/LoginComponent::initSession/02');
+          this.logger.info('user/LoginComponent::initSession/02');
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
-          console.log('user/LoginComponent::initSession/envl:', envl);
+          this.logger.info('user/LoginComponent::initSession/envl:', envl);
+          
           if (environment.wsMode === 'sio') {
             this.svSio.sendPayLoad(envl)
           }
 
           if (environment.wsMode === 'wss') {
-            // export interface ICdPushEnvelop {
-            //   pushData: {
-            //     appId?: string;
-            //     appSockets?: ISocketItem[];
-            //     pushGuid: string;
-            //     m?: string;
-            //     pushRecepients: ICommConversationSub[];
-            //     triggerEvent: string;
-            //     emittEvent: string;
-            //     token: string;
-            //     commTrack: CommTrack;
-            //     isNotification: boolean | null;
-            //     isAppInit?: boolean | null;
-            //   },
-            //   req: ICdRequest | null,
-            //   resp: ICdResponse | null
-            // };
             this.svWss.sendMsg(envl)
           }
 
@@ -181,7 +169,7 @@ export class LoginComponent implements OnInit {
   }
 
   configPushPayload(triggerEvent: string, emittEvent: string, cuid: number): ICdPushEnvelop {
-    console.log('starting cd-user-v2::LoginComponent::configPushPayload()');
+    this.logger.info('starting cd-user-v2::LoginComponent::configPushPayload()');
     const pushEnvelope: ICdPushEnvelop = {
       pushData: {
         pushGuid: '',
@@ -253,27 +241,27 @@ export class LoginComponent implements OnInit {
 
 
     // set recepient
-    console.log('cd-user-v2::LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
-    console.log('cd-user-v2::LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
+    this.logger.info('cd-user-v2::LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
+    this.logger.info('cd-user-v2::LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
     const uRecepient: ICommConversationSub = { ...users[0] }
     uRecepient.subTypeId = 7;
-    console.log('cd-user-v2::LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
+    this.logger.info('cd-user-v2::LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
     uRecepient.cdObjId = this.sidebarInitData.value
     envl.pushData.pushRecepients.push(uRecepient)
 
-    console.log('cd-user-v2::LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
+    this.logger.info('cd-user-v2::LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
 
     return envl;
 
   }
 
   searchLocalStorage(f: LsFilter) {
-    console.log('starting LoginComponent::searchLocalStorage()/lcLength:');
+    this.logger.info('starting LoginComponent::searchLocalStorage()/lcLength:');
     // const lc = { ...localStorage };
     const lcArr = [];
 
     const lcLength = localStorage.length;
-    console.log('LoginComponent::searchLocalStorage()/lcLength:', lcLength);
+    this.logger.info('LoginComponent::searchLocalStorage()/lcLength:', lcLength);
     let i = 0;
     for (let i = 0; i < localStorage.length; i++) {
       // try {
@@ -281,41 +269,41 @@ export class LoginComponent implements OnInit {
       const k = localStorage.key(i);
       // use key name to retrieve the corresponding value
       var v = localStorage.getItem(k!);
-      // console.log the iteration key and value
-      console.log('Key: ' + k + ', Value: ' + v);
+      // this.logger.info the iteration key and value
+      this.logger.info('Key: ' + k + ', Value: ' + v);
       try {
-        console.log('LoginComponent::searchLocalStorage()/1')
+        this.logger.info('LoginComponent::searchLocalStorage()/1')
         if (typeof (v) === 'object') {
-          console.log('LoginComponent::searchLocalStorage()/2')
-          console.log('LoginComponent::searchLocalStorage()/v:', v)
+          this.logger.info('LoginComponent::searchLocalStorage()/2')
+          this.logger.info('LoginComponent::searchLocalStorage()/v:', v)
           const lcItem = JSON.parse(v!);
           if ('success' in lcItem) {
-            console.log('LoginComponent::searchLocalStorage()/3')
+            this.logger.info('LoginComponent::searchLocalStorage()/3')
             const appState: IAppState = lcItem;
-            console.log('LoginComponent::searchLocalStorage()/appState:', appState)
+            this.logger.info('LoginComponent::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
-            console.log('LoginComponent::searchLocalStorage()/4')
+            this.logger.info('LoginComponent::searchLocalStorage()/4')
             const cdObjId = lcItem;
-            console.log('LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
+            this.logger.info('LoginComponent::searchLocalStorage()/cdObjId:', cdObjId)
           }
-          console.log('LoginComponent::searchLocalStorage()/5')
+          this.logger.info('LoginComponent::searchLocalStorage()/5')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          console.log('LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
-          console.log('LoginComponent::searchLocalStorage()/6')
+          this.logger.info('LoginComponent::searchLocalStorage()/typeof (v):', typeof (v))
+          this.logger.info('LoginComponent::searchLocalStorage()/6')
           lcArr.push({ key: k, value: JSON.parse(v) })
         }
 
       } catch (e) {
-        console.log('offending item:', v);
-        console.log('the item is not an object');
-        console.log('Error:', e);
+        this.logger.info('offending item:', v);
+        this.logger.info('the item is not an object');
+        this.logger.info('Error:', e);
       }
 
     }
-    console.log('LoginComponent::searchLocalStorage()/lcArr:', lcArr);
-    console.log('LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+    this.logger.info('LoginComponent::searchLocalStorage()/lcArr:', lcArr);
+    this.logger.info('LoginComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
     // const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;
@@ -326,11 +314,11 @@ export class LoginComponent implements OnInit {
     let ret: any = null;
     try {
       if (this.debug) {
-        console.log('LoginComponent::searchLocalStorage()/debug=true:');
+        this.logger.info('LoginComponent::searchLocalStorage()/debug=true:');
         ret = lcArr
           .filter((d: any) => {
             if (typeof (d.value) === 'object') {
-              console.log('LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
+              this.logger.info('LoginComponent::searchLocalStorage()/filteredByObject: d:', d);
               return d
             } else {
               return null;
@@ -338,18 +326,18 @@ export class LoginComponent implements OnInit {
           })
           .filter((d: any) => {
             if ('resourceName' in d.value) {
-              console.log('LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
+              this.logger.info('LoginComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
               return d;
             } else {
               return null;
             }
           })
           .filter((d: any) => {
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d:', d);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
-            console.log('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
+            this.logger.info('LoginComponent::searchLocalStorage()/filteredByName: d:', d);
+            this.logger.info('LoginComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
+            this.logger.info('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+            this.logger.info('LoginComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
+            this.logger.info('LoginComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
             if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
               return d;
             } else {
@@ -358,22 +346,22 @@ export class LoginComponent implements OnInit {
           })
           .reduce(
             (prev = {}, current = {}) => {
-              console.log('LoginComponent::searchLocalStorage()/prev:', prev);
-              console.log('LoginComponent::searchLocalStorage()/current:', current);
+              this.logger.info('LoginComponent::searchLocalStorage()/prev:', prev);
+              this.logger.info('LoginComponent::searchLocalStorage()/current:', current);
               return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
             }
           );
       } else {
-        console.log('LoginComponent::searchLocalStorage()/debug=false:');
+        this.logger.info('LoginComponent::searchLocalStorage()/debug=false:');
         ret = lcArr
           .filter(isObject)
           .filter(CdObjIdItems!)
           .filter(filtObjName!)
           .reduce(latestItem!)
       }
-      console.log('LoginComponent::searchLocalStorage()/ret:', ret);
+      this.logger.info('LoginComponent::searchLocalStorage()/ret:', ret);
     } catch (e) {
-      console.log('Error:', e);
+      this.logger.info('Error:', e);
     }
     return ret;
   }
