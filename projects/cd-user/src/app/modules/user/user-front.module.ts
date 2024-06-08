@@ -38,9 +38,12 @@ import { ListComponent } from './list/list.component';
     UserRoutingModule,
     FormsModule, ReactiveFormsModule,
     LoggerModule.forRoot({
-      level: NgxLoggerLevel.DEBUG,
-      serverLogLevel: NgxLoggerLevel.ERROR,
-      serverLoggingUrl: '/api/logs' // URL to your server-side logging endpoint
+      level: NgxLoggerLevel.TRACE,
+      serverLogLevel: NgxLoggerLevel.OFF,
+      serverLoggingUrl: '/api/logs',
+      disableConsoleLogging: false, // Disable logging to the browser console
+      enableSourceMaps: true, // Enable source maps to map errors back to original TypeScript code
+      colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red'] // Customize log colors
     }),
     NgbNavModule, NgbDropdownModule, NgbTooltipModule, NgbAccordionModule,
     NazUiModule, NazTableModule, NazCreateModule, NazEditModule, NazDeleteModule, NgbAlertModule,

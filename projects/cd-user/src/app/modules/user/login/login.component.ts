@@ -133,10 +133,12 @@ export class LoginComponent implements OnInit {
           this.logger.info('user/LoginComponent::initSession/envl:', envl);
           
           if (environment.wsMode === 'sio') {
+            this.logger.info('user/LoginComponent::initSession/envl:...useing sio');
             this.svSio.sendPayLoad(envl)
           }
 
           if (environment.wsMode === 'wss') {
+            this.logger.info('user/LoginComponent::initSession/envl:...useing wss');
             this.svWss.sendMsg(envl)
           }
 
