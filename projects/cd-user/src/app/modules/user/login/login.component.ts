@@ -94,6 +94,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(fg: any) {
+    this.logger.info('starting user/LoginComponent::login');
     let authData: AuthData = fg.value;
     const valid = fg.valid;
     this.logger.info('user/LoginComponent::login/01');
