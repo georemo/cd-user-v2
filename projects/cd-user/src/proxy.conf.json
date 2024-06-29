@@ -1,11 +1,11 @@
 {
     "/": {
-        "target": "https://cd-api.co.ke/api",
+        "target": "https://34.224.98.250/api",
         "secure": false,
         "logLevel": "debug"
     },
     "/": {
-        "target": "https://cd-api.co.ke:3002/sio",
+        "target": "https://34.224.98.250:3002/sio",
         "secure": false,
         "logLevel": "debug"
     }

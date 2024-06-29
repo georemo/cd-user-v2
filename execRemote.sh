@@ -2,7 +2,7 @@
 
 # Variables
 REMOTE_USER="root"
-REMOTE_HOST="cd-shell.asdap.africa"
+REMOTE_HOST="asdap.net"
 REMOTE_SCRIPT="/home/devops/updateCdUser.sh"
 SSH_KEY="$HOME/.ssh/id_rsa"
 

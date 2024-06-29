@@ -7,7 +7,7 @@ import { EnvConfig } from "@corpdesk/core";
 
 // const h = new HttpHeaders({'Content-Type': 'application/json'});
 
-const API_HOST = "https://cd-api.co.ke"
+const API_HOST = "https://34.224.98.250"
 const API_ROUTE = '/api'
 const API_PORT = '443'
 const SIO_PORT = '3002'
@@ -17,9 +17,9 @@ const SIO_ROUTE = '/sio'
 export const environment: EnvConfig = {
   appId: '',
   production: false,
-  apiEndpoint: `${API_HOST}${API_ROUTE}`,
-  sioEndpoint: `${API_HOST}:${SIO_PORT}`,
-  wsEndpoint: 'ws://cd-api.co.ke:3000',
+  apiEndpoint: `${API_HOST}:${API_PORT}${API_ROUTE}`,
+  sioEndpoint: `${API_HOST}:${SIO_PORT}${SIO_ROUTE}`,
+  wsEndpoint: 'ws://34.224.98.250:3000',
   wsMode: 'wss',
   pushConfig: {
     sio: {
@@ -36,7 +36,7 @@ export const environment: EnvConfig = {
         forceTLS: true,
         userAuthentication: {
           // endpoint: "/pusher/user-auth",
-          endpoint: "https://cd-api.co.ke:3002/pusher/auth",
+          endpoint: "https://34.224.98.250:3002/pusher/auth",
           transport: "ajax",
           params: {},
           headers: {},
@@ -44,18 +44,18 @@ export const environment: EnvConfig = {
           customHandler: null,
         },
         channelAuthorization: {
-          endpoint: "https://cd-api.co.ke:3002/pusher/auth",
+          endpoint: "https://34.224.98.250:3002/pusher/auth",
         },
-        authEndpoint: 'https://cd-api.co.ke:3002/pusher/auth',
+        authEndpoint: 'https://34.224.98.250:3002/pusher/auth',
       }
     }
   },
   CD_PORT: 3001,
   consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
   USER_RESOURCES: 'http://routed-93/user-resources',
-  apiHost: 'https://cd-api.co.ke',
-  sioHost: 'https://cd-api.co.ke',
-  shellHost: 'https://cd-shell.asdap.africa',
+  apiHost: 'https://34.224.98.250',
+  sioHost: 'https://34.224.98.250',
+  shellHost: 'https://asdap.net',
   consumer: '',
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
   clientAppId: 2, // this client application identifies itself to the server with this id
