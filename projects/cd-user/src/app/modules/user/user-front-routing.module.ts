@@ -8,6 +8,8 @@ import { EditComponent } from './edit/edit.component';
 import { DeleteComponent } from './delete/delete.component';
 import { CreateComponent } from './create/create.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SignupComponent } from './signup/signup.component';
+import { PasswordresetComponent } from './passwordreset/passwordreset.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'profile', pathMatch: 'full' },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'edit', component: EditComponent },
   { path: 'delete', component: DeleteComponent },
   { path: 'create', component: CreateComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: 'passwordreset', component: PasswordresetComponent },
   { path: 'dashboard', component: DashboardComponent },
 ];
 

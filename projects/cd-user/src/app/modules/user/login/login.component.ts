@@ -157,7 +157,10 @@ export class LoginComponent implements OnInit {
             replaceUrl: false
           };
           // below: old method
-          this.route.navigate(['/comm'], params);
+          // this.route.navigate(['/comm'], params);
+          this.route.navigate(['/dashboard'], params);
+          this.route.navigate([environment.initialPage], params);
+          
 
           // below new method based on this.baseModel;
           // this.svNav.nsNavigate(this,'/comm','message from cd-user')

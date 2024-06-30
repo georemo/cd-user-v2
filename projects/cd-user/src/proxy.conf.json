@@ -1,6 +1,6 @@
 {
     "/": {
-        "target": "https://cd-api.co.ke/api",
+        "target": "https://cd-api.co.ke:3001/api",
         "secure": false,
         "logLevel": "debug"
     },

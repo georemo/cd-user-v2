@@ -9,7 +9,7 @@ import { EnvConfig } from "@corpdesk/core";
 
 const API_HOST = "https://cd-api.co.ke"
 const API_ROUTE = '/api'
-const API_PORT = '443'
+const API_PORT = '3001'
 const SIO_PORT = '3002'
 const PUSH_HOST = API_HOST
 const SIO_ROUTE = '/sio'
@@ -18,7 +18,7 @@ export const environment: EnvConfig = {
   appId: '',
   production: false,
   apiEndpoint: `${API_HOST}:${API_PORT}${API_ROUTE}`,
-  sioEndpoint: `${API_HOST}:${SIO_PORT}${SIO_ROUTE}`,
+  sioEndpoint: `${PUSH_HOST}:${SIO_PORT}${SIO_ROUTE}`,
   wsEndpoint: 'ws://cd-api.co.ke:3000',
   wsMode: 'wss',
   pushConfig: {
@@ -61,6 +61,7 @@ export const environment: EnvConfig = {
   clientAppId: 2, // this client application identifies itself to the server with this id
   SOCKET_IO_PORT: 3002, // push server port
   defaultauth: 'cd-auth', // fckService | cd-auth | firebase
+  initialPage: 'dashboard', // the default page, on successful login
   mfManifestPath: '/assets/mf.manifest.json',
   apiOptions: {
     headers: { 'Content-Type': 'application/json' }
