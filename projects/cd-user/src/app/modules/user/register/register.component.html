@@ -1,100 +1,119 @@
 <div class="home-btn d-none d-sm-block">
-    <a routerLink=""><i class="mdi mdi-home-variant h2 text-white"></i></a>
-  </div>
-  <div>
-    <div class="container-fluid p-0">
-      <div class="row g-0">
-        <div class="col-lg-4">
-          <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
-            <div class="w-100">
-              <div class="row justify-content-center">
-                <div class="col-lg-9">
-                  <div>
-                    <div class="text-center">
-                      <div>
-                        <a routerLink="" class="logo"><img src="assets/images/logo-dark.png" height="20" alt="logo"></a>
-                      </div>
-  
-                      <h4 class="font-size-18 mt-4">Register account</h4>
-                      <p class="text-muted">Get your free ASDAP account now.</p>
+  <a routerLink=""><i class="mdi mdi-home-variant h2 text-white"></i></a>
+</div>
+<div>
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <div class="col-lg-4">
+        <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+          <div class="w-100">
+            <div class="row justify-content-center">
+              <div class="col-lg-9">
+                <div>
+                  <div class="text-center">
+                    <div>
+                      <a routerLink="" class="logo"><img src="assets/images/logo-dark.png" height="20" alt="logo"></a>
                     </div>
-  
-                    <div class="p-2 mt-5">
-                      <form class="form-horizontal" [formGroup]="fg" (ngSubmit)="register(fg)">
-                        <ngb-alert type="success" *ngIf="successmsg" [dismissible]="false">Registeration successfull.
-                        </ngb-alert>
-                        <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
-  
-                        <div class="form-group auth-form-group-custom mb-4">
-                          <i class="ri-user-2-line auti-custom-input-icon"></i>
-                          <label for="username">Username</label>
-                          <input type="text" formControlName="username" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" id="username"
-                            placeholder="Enter username">
-                          <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                            <div *ngIf="f.username.errors.required">Userame is required</div>
-                          </div>
-                        </div>
-                        <div class="form-group auth-form-group-custom mb-4">
-                          <i class="ri-mail-line auti-custom-input-icon"></i>
-                          <label for="email">Email</label>
-                          <input type="email" formControlName="email" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email">
-                          <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                            <div *ngIf="f.email.errors.required">Email is required</div>
-                            <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
-                          </div>
-                        </div>
-                        <div class="form-group auth-form-group-custom mb-4">
-                          <i class="ri-lock-2-line auti-custom-input-icon"></i>
-                          <label for="password">Password</label>
-                          <input type="password" formControlName="password" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password"
-                            placeholder="Password">
-                          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                            <div *ngIf="f.password.errors.required">Password is required</div>
-                          </div>
-                        </div>
 
-                        <div class="form-group auth-form-group-custom mb-4">
-                          <i class="ri-lock-2-line auti-custom-input-icon"></i>
-                          <label for="confirmPassword">Confirm Password</label>
-                          <input type="password" formControlName="confirmPassword" class="form-control" id="confirmPassword"
-                            [ngClass]="{ 'is-invalid': submitted && loginInvalid }" placeholder="Confirm Password" />
-                          <div *ngIf="submitted && loginInvalid" class="invalid-feedback">
-                            <div *ngIf="loginInvalid">Confirmation of password is required</div>
-                          </div>
+                    <h4 class="font-size-18 mt-4">Register account</h4>
+                    <p class="text-muted">Get your free ASDAP account now.</p>
+                  </div>
+
+                  <div class="p-2 mt-5">
+                    <form class="form-horizontal" [formGroup]="fg" (ngSubmit)="register(fg)">
+                      <ngb-alert type="success" *ngIf="successmsg" [dismissible]="false">Registeration successfull.
+                      </ngb-alert>
+                      <ngb-alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</ngb-alert>
+
+                      <div class="form-group auth-form-group-custom mb-4">
+                        <i class="ri-user-2-line auti-custom-input-icon"></i>
+                        <label for="userName">Username</label>
+                        <input type="text" formControlName="userName" autocomplete="off" class="form-control"
+                          [ngClass]="{ 'is-invalid': submitted && regInvalid }" id="userName"
+                          placeholder="Enter username">
+                        <!-- <div *ngIf="submitted && regInvalid" class="invalid-feedback">
+                            <div *ngIf="regInvalid">Userame is required</div>
+                          </div> -->
+                        <div *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+                          <div *ngIf="userName.errors.required">Username is required.</div>
+                          <div *ngIf="userName.errors.minlength">Username must be at least 3 characters long.</div>
+                          <div *ngIf="userName.errors.maxlength">Username cannot be more than 20 characters long.</div>
                         </div>
-  
-                        <div class="text-center">
-                          <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Register</button>
+                      </div>
+                      <div class="form-group auth-form-group-custom mb-4">
+                        <i class="ri-mail-line auti-custom-input-icon"></i>
+                        <label for="email">Email</label>
+                        <input type="email" formControlName="email" autocomplete="off" class="form-control"
+                          [ngClass]="{ 'is-invalid': submitted && regInvalid }" id="email" placeholder="Email">
+                        <!-- <div *ngIf="submitted && regInvalid" class="invalid-feedback">
+                            <div *ngIf="regInvalid">Email is required</div>
+                            <div *ngIf="regInvalid">Email must be a valid email address</div>
+                          </div> -->
+                        <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                          <div *ngIf="email.errors.required">Email is required.</div>
+                          <div *ngIf="email.errors.email">Invalid email format.</div>
                         </div>
-  
-                        <div class="mt-4 text-center">
-                          <p class="mb-0">By registering you agree to the ASDAP <a href="#" class="text-primary">Terms of
-                              Use</a></p>
+                      </div>
+                      <div class="form-group auth-form-group-custom mb-4">
+                        <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                        <label for="password">Password</label>
+                        <input type="password" formControlName="password" class="form-control"
+                          [ngClass]="{ 'is-invalid': submitted && regInvalid }" id="password" placeholder="Password">
+                        <!-- <div *ngIf="submitted && regInvalid" class="invalid-feedback">
+                            <div *ngIf="regInvalid">Password is required</div>
+                          </div> -->
+                        <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                          <div *ngIf="password.errors.required">Password is required.</div>
+                          <div *ngIf="password.errors.minlength">Password must be at least 8 characters long.</div>
+                          <div *ngIf="password.errors.maxlength">Password cannot be more than 20 characters long.</div>
+                          <div *ngIf="password.errors.pattern">Password must contain at least one uppercase letter, one
+                            lowercase letter, one digit, and one special character.</div>
                         </div>
-                      </form>
-                    </div>
-  
-                    <div class="mt-5 text-center">
-                      <p>Already have an account ? <a routerLink="/account/login" class="fw-medium text-primary">
-                          Login</a> </p>
-                      <p>© 2023 ASDAP. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesdesign</p>
-                    </div>
+                      </div>
+
+                      <div class="form-group auth-form-group-custom mb-4">
+                        <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" formControlName="confirmPassword" class="form-control"
+                          id="confirmPassword" [ngClass]="{ 'is-invalid': submitted && regInvalid }"
+                          placeholder="Confirm Password" />
+                        <!-- <div *ngIf="submitted && regInvalid" class="invalid-feedback">
+                          <div *ngIf="regInvalid">Confirmation of password is required</div>
+                        </div> -->
+                        <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)">
+                          <div *ngIf="confirmPassword.errors.required">Confirming the password is required.</div>
+                          <div *ngIf="fg.errors?.mismatch">Passwords must match.</div>
+                        </div>
+                      </div>
+
+                      <div class="text-center">
+                        <button class="btn btn-primary w-md waves-effect waves-light" type="submit">Register</button>
+                      </div>
+
+                      <div class="mt-4 text-center">
+                        <p class="mb-0">By registering you agree to the ASDAP <a href="#" class="text-primary">Terms of
+                            Use</a></p>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div class="mt-5 text-center">
+                    <p>Already have an account ? <a routerLink="/account/login" class="fw-medium text-primary">
+                        Login</a> </p>
+                    <p>© 2023 ASDAP. Powered by CORPDESK</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-lg-8">
-          <div class="authentication-bg">
-            <div class="bg-overlay"></div>
-          </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="authentication-bg">
+          <div class="bg-overlay"></div>
         </div>
       </div>
     </div>
   </div>
-  <!-- end page -->
-  
+</div>
+<!-- end page -->
