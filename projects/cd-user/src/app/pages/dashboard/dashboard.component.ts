@@ -19,6 +19,6 @@ export class DashboardComponent implements OnInit {
   breadCrumbItems: Array<{}>;
 
   ngOnInit(): void {
-    this.breadCrumbItems = [{ label: 'Nazox' }, { label: 'Dashboard', active: true }];
+    this.breadCrumbItems = [{ label: 'ASDAP' }, { label: 'Dashboard', active: true }];
   }
 }

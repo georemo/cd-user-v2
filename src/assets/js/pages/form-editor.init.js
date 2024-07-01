@@ -1,5 +1,5 @@
 /*
-Template Name: Nazox -  Admin & Dashboard Template
+Template Name: ASDAP -  Admin & Dashboard Template
 Author: Themesdesign
 Contact: themesdesign.in@gmail.com
 File: Form editor Js File
