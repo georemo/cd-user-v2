@@ -18,9 +18,9 @@ export const environment: EnvConfig = {
   appId: '',
   production: false,
   apiEndpoint: `${API_HOST}:${API_PORT}${API_ROUTE}`,
-  sioEndpoint: `${PUSH_HOST}:${SIO_PORT}${SIO_ROUTE}`,
+  sioEndpoint: `${PUSH_HOST}:${SIO_PORT}`,
   wsEndpoint: 'ws://cd-api.co.ke:3000',
-  wsMode: 'wss',
+  wsMode: 'sio',
   pushConfig: {
     sio: {
       enabled: true,
@@ -51,7 +51,12 @@ export const environment: EnvConfig = {
     }
   },
   CD_PORT: 3001,
-  consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
+  consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer, to depricate and substitute by clientContext below
+  clientContext: {
+    entity: "ASDAP", // context of client eg company, project or proramme eg ASDAP, MPEPZ...OR company name
+    clientAppId: 2, // this client application identifies itself to the server with this id
+    consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
+  },
   USER_RESOURCES: 'http://routed-93/user-resources',
   apiHost: 'https://cd-api.co.ke',
   sioHost: 'https://cd-api.co.ke',

@@ -21,6 +21,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DeleteComponent } from './delete/delete.component';
 import { EditComponent } from './edit/edit.component';
 import { ListComponent } from './list/list.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ListComponent } from './list/list.component';
     DashboardComponent,
     DeleteComponent,
     EditComponent,
-    ListComponent
+    ListComponent,
+    VerifyEmailComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +65,8 @@ import { ListComponent } from './list/list.component';
     DashboardComponent,
     DeleteComponent,
     EditComponent,
-    ListComponent
+    ListComponent,
+    VerifyEmailComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

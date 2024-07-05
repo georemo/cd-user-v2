@@ -58,6 +58,11 @@ export const environment: EnvConfig = {
   shellHost: 'https://asdap.net',
   consumer: '',
   clientAppGuid: 'ca0fe39f-92b2-484d-91ef-487d4fc462a2',
+  clientContext: {
+    entity: "ASDAP", // context of client eg company, project or proramme eg ASDAP, MPEPZ...OR company name
+    clientAppId: 2, // this client application identifies itself to the server with this id
+    consumerToken: 'B0B3DA99-1859-A499-90F6-1E3F69575DCD',// current company consumer
+  },
   clientAppId: 2, // this client application identifies itself to the server with this id
   SOCKET_IO_PORT: 3002, // push server port
   defaultauth: 'cd-auth', // fckService | cd-auth | firebase

@@ -3,12 +3,15 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { v4 as uuidv4 } from 'uuid';
 import {
   UserService, AuthData, SessService, MenuService, NavService, SioClientService, WebsocketService, ICommConversationSub,
-  BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem
+  BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem,
+  DEFAULT_PUSH_RECEPIENTS,
+  CdPushEnvelop,
+  IQuery
 } from '@corpdesk/core';
 import { NGXLogger } from 'ngx-logger';
 import { environment } from '../../../../environments/environment';
 import { User } from 'src/app/core/models/auth.models';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 interface IInitData {
@@ -17,11 +20,11 @@ interface IInitData {
 }
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-verify-email',
+  templateUrl: './verify-email.component.html',
+  styleUrls: ['./verify-email.component.scss']
 })
-export class RegisterComponent implements OnInit, AfterViewInit {
+export class VerifyEmailComponent implements OnInit, AfterViewInit {
   debug = true;
   baseModel: BaseModel;
   resourceGuid = uuidv4();
@@ -40,6 +43,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // set the currenr year
   year: number = new Date().getFullYear();
 
+  verificationToken: string;
+
   sidebarInitData: IInitData;
   constructor(
     private fb: FormBuilder,
@@ -50,9 +55,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private svSess: SessService,
     private svMenu: MenuService,
     private svNav: NavService,
-    private route: Router,
+    private router: Router,
     private svBase: BaseService,
     private toastr: ToastrService,
+    private aRoute: ActivatedRoute,
   ) {
     this.svSio.env = environment;
     this.svSio.initSio(null, null);
@@ -91,7 +97,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.logger.info('cd-user-v2::RegistrationComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
+    this.aRoute.queryParams.subscribe(params => {
+      this.verificationToken = params['token'];
+      // this.verifyEmail();
+    });
+
+    this.logger.info('cd-user-v2::VerifyEmailComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
     // this.logger.debug('AppComponent initialized');
 
     const filter: LsFilter = {
@@ -106,10 +117,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         commTrack: null
       }
     }
-    this.logger.info('cd-user-v2::RegistrationComponent::ngOnInit()/filter:', filter);
+    this.logger.info('cd-user-v2::VerifyEmailComponent::ngOnInit()/filter:', filter);
     // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
     this.sidebarInitData = this.searchLocalStorage(filter);
-    this.logger.info('user/RegistrationComponent::ngOnInit()/this.sidebarInitData:', this.sidebarInitData);
+    this.logger.info('user/VerifyEmailComponent::ngOnInit()/this.sidebarInitData:', this.sidebarInitData);
     const socketDataStr = localStorage.getItem('socketData')
     if (socketDataStr) {
       this.socketData = JSON.parse(socketDataStr).filter(appInit)
@@ -120,7 +131,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           return null;
         }
       }
-      this.logger.info('user/RegistrationComponent::ngOnInit()/this.socketData:', this.socketData);
+      this.logger.info('user/VerifyEmailComponent::ngOnInit()/this.socketData:', this.socketData);
     } else {
       this.logger.info('Err: socket data is not valid')
     }
@@ -173,23 +184,91 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // activate user by updating activation status
+  async activateUser(activationData:any): Promise<void> {
+    const updateCmd = {
+            ctx: 'Sys',
+            m: 'User',
+            c: 'User',
+            a: "Update",
+            dat: {
+                f_vals: [
+                    {
+                        query: {
+                            update: {
+                                activated: true
+                            },
+                            where: {
+                                activationKey: activationData.activationKey
+                            }
+                        }
+                    }
+                ],
+                token: activationData.sid
+            },
+            args: {}
+        }
+    await this.updateUser(updateCmd);
+  }
+
+  // /**
+    //  * {
+    //         "ctx": "Sys",
+    //         "m": "Moduleman",
+    //         "c": "User",
+    //         "a": "Update",
+    //         "dat": {
+    //             "f_vals": [
+    //                 {
+    //                     "query": {
+    //                         "update": {
+    //                             "consumer-resourceName": "/corp-deskv1.2.1.2/system/modules/comm/controllers"
+    //                         },
+    //                         "where": {
+    //                             "consumer-resourceId": 45762
+    //                         }
+    //                     }
+    //                 }
+    //             ],
+    //             "token": "08f45393-c10e-4edd-af2c-bae1746247a1"
+    //         },
+    //         "args": {}
+    //     }
+    //  * @param req
+    //  * @param res
+    //  */
+  async updateUser(updateQuery: any) {
+    this.svBase.update$(updateQuery, this.baseModel.token)
+      .subscribe((res: any) => {
+        const pushEnvelop: CdPushEnvelop = {
+          pushRecepients: DEFAULT_PUSH_RECEPIENTS,
+          pushData: res,
+          emittEvent: 'push-notif',
+          triggerEvent: 'send-notif',
+          req: null,
+          resp: res
+        };
+        // this.svNotif.emitNotif(pushEnvelop);
+      })
+  }
+
   register(fg: any) {
     if (this.fg.valid) {
       console.log('Form Submitted!', this.fg.value);
     }
-    this.logger.info('starting register/RegistrationComponent::registration');
+    this.logger.info('starting register/VerifyEmailComponent::verifyEmail');
     let regData: User = fg.value;
     const valid = fg.valid;
-    this.logger.info('register/RegistrationComponent::registration/01');
-    this.logger.info('register/RegistrationComponent::registration/fg:', fg);
-    this.logger.info('register/RegistrationComponent::registration/valid:', valid);
+    this.logger.info('register/VerifyEmailComponent::verifyEmail/01');
+    this.logger.info('register/VerifyEmailComponent::verifyEmail/fg:', fg);
+    this.logger.info('register/VerifyEmailComponent::verifyEmail/valid:', valid);
     this.submitted = true;
     const consumerGuid = { consumerGuid: environment.consumerToken };
     regData = Object.assign({}, regData, consumerGuid); // merge data with consumer object
     try {
-      this.logger.info('register/RegistrationComponent::registration/02');
+      this.logger.info('register/VerifyEmailComponent::verifyEmail/02');
       if (valid) {
-        this.logger.info('register/RegistrationComponent::registration/03');
+        this.logger.info('register/VerifyEmailComponent::verifyEmail/03');
         // Remove the confirmPassword control before submission
         // this.fg.removeControl('confirmPassword');
         delete regData.confirmPassword;
@@ -199,7 +278,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         // this.fg.addControl('confirmPassword', this.fb.control('', Validators.required));
       }
     } catch (err) {
-      this.logger.info('register/RegistrationComponent::registration/04');
+      this.logger.info('register/VerifyEmailComponent::verifyEmail/04');
       this.errMsg = "Something went wrong!!"
       this.regInvalid = true;
       this.toastr.error('Please fill out the form correctly.', 'Error');
@@ -209,12 +288,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
 
   searchLocalStorage(f: LsFilter) {
-    this.logger.info('starting RegistrationComponent::searchLocalStorage()/lcLength:');
+    this.logger.info('starting VerifyEmailComponent::searchLocalStorage()/lcLength:');
     // const lc = { ...localStorage };
     const lcArr = [];
 
     const lcLength = localStorage.length;
-    this.logger.info('RegistrationComponent::searchLocalStorage()/lcLength:', lcLength);
+    this.logger.info('VerifyEmailComponent::searchLocalStorage()/lcLength:', lcLength);
     let i = 0;
     for (let i = 0; i < localStorage.length; i++) {
       // try {
@@ -225,26 +304,26 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       // this.logger.info the iteration key and value
       this.logger.info('Key: ' + k + ', Value: ' + v);
       try {
-        this.logger.info('RegistrationComponent::searchLocalStorage()/1')
+        this.logger.info('VerifyEmailComponent::searchLocalStorage()/1')
         if (typeof (v) === 'object') {
-          this.logger.info('RegistrationComponent::searchLocalStorage()/2')
-          this.logger.info('RegistrationComponent::searchLocalStorage()/v:', v)
+          this.logger.info('VerifyEmailComponent::searchLocalStorage()/2')
+          this.logger.info('VerifyEmailComponent::searchLocalStorage()/v:', v)
           const lcItem = JSON.parse(v!);
           if ('success' in lcItem) {
-            this.logger.info('RegistrationComponent::searchLocalStorage()/3')
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/3')
             const appState: IAppState = lcItem;
-            this.logger.info('RegistrationComponent::searchLocalStorage()/appState:', appState)
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/appState:', appState)
           }
           if ('resourceGuid' in lcItem) {
-            this.logger.info('RegistrationComponent::searchLocalStorage()/4')
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/4')
             const cdObjId = lcItem;
-            this.logger.info('RegistrationComponent::searchLocalStorage()/cdObjId:', cdObjId)
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/cdObjId:', cdObjId)
           }
-          this.logger.info('RegistrationComponent::searchLocalStorage()/5')
+          this.logger.info('VerifyEmailComponent::searchLocalStorage()/5')
           lcArr.push({ key: k, value: JSON.parse(v!) })
         } else {
-          this.logger.info('RegistrationComponent::searchLocalStorage()/typeof (v):', typeof (v))
-          this.logger.info('RegistrationComponent::searchLocalStorage()/6')
+          this.logger.info('VerifyEmailComponent::searchLocalStorage()/typeof (v):', typeof (v))
+          this.logger.info('VerifyEmailComponent::searchLocalStorage()/6')
           lcArr.push({ key: k, value: JSON.parse(v) })
         }
 
@@ -255,8 +334,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       }
 
     }
-    this.logger.info('RegistrationComponent::searchLocalStorage()/lcArr:', lcArr);
-    this.logger.info('RegistrationComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+    this.logger.info('VerifyEmailComponent::searchLocalStorage()/lcArr:', lcArr);
+    this.logger.info('VerifyEmailComponent::searchLocalStorage()/f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
     // isAppState
     // const resourceName = 'UserModule';
     const AppStateItems = (d: any) => 'success' in d.value;
@@ -267,11 +346,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     let ret: any = null;
     try {
       if (this.debug) {
-        this.logger.info('RegistrationComponent::searchLocalStorage()/debug=true:');
+        this.logger.info('VerifyEmailComponent::searchLocalStorage()/debug=true:');
         ret = lcArr
           .filter((d: any) => {
             if (typeof (d.value) === 'object') {
-              this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByObject: d:', d);
+              this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByObject: d:', d);
               return d
             } else {
               return null;
@@ -279,18 +358,18 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           })
           .filter((d: any) => {
             if ('resourceName' in d.value) {
-              this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
+              this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByResourceNameField: d:', d);
               return d;
             } else {
               return null;
             }
           })
           .filter((d: any) => {
-            this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByName: d:', d);
-            this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
-            this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
-            this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
-            this.logger.info('RegistrationComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByName: d:', d);
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByName: d.value.resourceName:', d.value.resourceName);
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByName: f.cdObjId!.resourceName:', f.cdObjId!.resourceName);
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByName: d.value.ngModule:', d.value.ngModule);
+            this.logger.info('VerifyEmailComponent::searchLocalStorage()/filteredByName: f.cdObjId!.ngModule:', f.cdObjId!.ngModule);
             if (d.value.resourceName === f.cdObjId!.resourceName && d.value.ngModule === f.cdObjId!.ngModule) {
               return d;
             } else {
@@ -299,20 +378,20 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           })
           .reduce(
             (prev = {}, current = {}) => {
-              this.logger.info('RegistrationComponent::searchLocalStorage()/prev:', prev);
-              this.logger.info('RegistrationComponent::searchLocalStorage()/current:', current);
+              this.logger.info('VerifyEmailComponent::searchLocalStorage()/prev:', prev);
+              this.logger.info('VerifyEmailComponent::searchLocalStorage()/current:', current);
               return (prev.value.commTrack.initTime > current.value.commTrack.initTime) ? prev : current;
             }
           );
       } else {
-        this.logger.info('RegistrationComponent::searchLocalStorage()/debug=false:');
+        this.logger.info('VerifyEmailComponent::searchLocalStorage()/debug=false:');
         ret = lcArr
           .filter(isObject)
           .filter(CdObjIdItems!)
           .filter(filtObjName!)
           .reduce(latestItem!)
       }
-      this.logger.info('RegistrationComponent::searchLocalStorage()/ret:', ret);
+      this.logger.info('VerifyEmailComponent::searchLocalStorage()/ret:', ret);
     } catch (e) {
       this.logger.info('Error:', e);
     }

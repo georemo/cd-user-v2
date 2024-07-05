@@ -8,6 +8,7 @@ import {
   BaseModel, IAppState, CdObjId, BaseService, LsFilter, StorageType, ICdPushEnvelop, ISocketItem
 } from '@corpdesk/core';
 import { environment } from '../../../../environments/environment';
+import { SioClientTestService } from '../../../services/sio-client-test.service';
 // import { SioClientService } from '../../../core/services/sio-client.service';
 interface IInitData {
   key: string;
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private logger: NGXLogger,
     private svSio: SioClientService,
+    private svSioTest: SioClientTestService,
     private svWss: WebsocketService,
     private svUser: UserService,
     private svSess: SessService,
@@ -59,7 +61,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.logger.info('cd-user-v2::LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
     // this.logger.debug('AppComponent initialized');
-    
+
     const filter: LsFilter = {
       storageType: StorageType.CdObjId,
       cdObjId: {
@@ -132,14 +134,27 @@ export class LoginComponent implements OnInit {
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
           this.logger.info('user/LoginComponent::initSession/envl:', envl);
-          
+
           if (environment.wsMode === 'sio') {
-            this.logger.info('user/LoginComponent::initSession/envl:...useing sio');
-            this.svSio.sendPayLoad(envl)
+            this.logger.info('user/LoginComponent::initSession/envl:...using sio');
+            // this.svSio.sendPayLoad(envl)
+
+            // test sio
+            // this.svSioTest.sendMessage(envl.pushData.triggerEvent, envl)
+            //   .subscribe(
+            //     (status) => {
+            //       console.log('user/LoginComponent::initSession/Message sent successfully');
+            //     },
+            //     (error) => {
+            //       console.error("user/LoginComponent::initSession/error:", error);
+            //     }
+            //   );
+            this.sendSioMessage(envl.pushData.triggerEvent, envl)
+
           }
 
           if (environment.wsMode === 'wss') {
-            this.logger.info('user/LoginComponent::initSession/envl:...useing wss');
+            this.logger.info('user/LoginComponent::initSession/envl:...using wss');
             this.svWss.sendMsg(envl)
           }
 
@@ -160,7 +175,7 @@ export class LoginComponent implements OnInit {
           // this.route.navigate(['/comm'], params);
           this.route.navigate(['/dashboard'], params);
           this.route.navigate([environment.initialPage], params);
-          
+
 
           // below new method based on this.baseModel;
           // this.svNav.nsNavigate(this,'/comm','message from cd-user')
@@ -172,6 +187,22 @@ export class LoginComponent implements OnInit {
       }
     });
 
+  }
+
+  sendSioMessage(triggerEvent:string, envl:any): void {
+    this.logger.info('user/LoginComponent::sendSioMessage/triggerEvent:', triggerEvent);
+    this.logger.info('user/LoginComponent::sendSioMessage/envl:', envl);
+    this.svSioTest.sendMessage2(triggerEvent, envl).subscribe({
+      next: (response: boolean) => {
+        console.log('Message sent successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error sending message:', error);
+      },
+      complete: () => {
+        console.log('Message sending complete');
+      }
+    });
   }
 
   configPushPayload(triggerEvent: string, emittEvent: string, cuid: number): ICdPushEnvelop {
