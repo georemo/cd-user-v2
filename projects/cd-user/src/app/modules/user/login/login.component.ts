@@ -64,29 +64,29 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.logger.info('cd-user-v2::cd-user/LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
+    this.logger.info('cd-user/LoginComponent::ngOnInit()/StorageType.CdObjId:', StorageType.CdObjId);
     // this.logger.debug('AppComponent initialized');
     this.initialize()
   }
 
   login(fg: any) {
-    this.logger.info('starting user/cd-user/LoginComponent::login');
+    this.logger.info('starting cd-user/LoginComponent::login');
     let authData: AuthData = fg.value;
     const valid = fg.valid;
-    this.logger.info('user/cd-user/LoginComponent::login/01');
-    this.logger.info('user/cd-user/LoginComponent::login/fg:', fg);
-    this.logger.info('user/cd-user/LoginComponent::login/valid:', valid);
+    this.logger.info('cd-user/LoginComponent::login/01');
+    this.logger.info('cd-user/LoginComponent::login/fg:', fg);
+    this.logger.info('cd-user/LoginComponent::login/valid:', valid);
     this.submitted = true;
     const consumerGuid = { consumerGuid: environment.consumerToken };
     authData = Object.assign({}, authData, consumerGuid); // merge data with consumer object
     try {
-      this.logger.info('user/cd-user/LoginComponent::login/02');
+      this.logger.info('cd-user/LoginComponent::login/02');
       if (valid) {
-        this.logger.info('user/cd-user/LoginComponent::login/03');
+        this.logger.info('cd-user/LoginComponent::login/03');
         this.initSession(authData);
       }
     } catch (err) {
-      this.logger.info('user/cd-user/LoginComponent::login/04');
+      this.logger.info('cd-user/LoginComponent::login/04');
       this.errMsg = "Something went wrong!!"
       this.loginInvalid = true;
     }
@@ -96,22 +96,23 @@ export class LoginComponent implements OnInit {
    * Initialize
    */
   initialize(): void {
+    this.logger.info('cd-user/LoginComponent::initialize()/01');
     const filter: LsFilter = {
       storageType: StorageType.CdObjId,
       cdObjId: {
         appId: localStorage.getItem('appId'),
         resourceGuid: null,
-        resourceName: 'LoginComponent',
+        resourceName: 'SidebarComponent',
         ngModule: 'SharedModule',
         jwtToken: localStorage.getItem('accessToken'),
         socket: null,
         commTrack: null
       }
     }
-    this.logger.info('cd-user-v2::cd-user/LoginComponent::ngOnInit()/filter:', filter);
+    this.logger.info('cd-user/LoginComponent::initialize()/filter:', filter);
     // this.sidebarInitData = this.svBase.searchLocalStorage(filter);
     this.sidebarInitData = this.searchLocalStorage(filter);
-    this.logger.info('user/cd-user/LoginComponent::ngOnInit()/this.sidebarInitData:', this.sidebarInitData);
+    this.logger.info('cd-user/LoginComponent::initialize()/this.sidebarInitData:', this.sidebarInitData);
     const socketDataStr = localStorage.getItem('socketData')
     if (socketDataStr) {
       this.socketData = JSON.parse(socketDataStr).filter(appInit)
@@ -122,7 +123,7 @@ export class LoginComponent implements OnInit {
           return null;
         }
       }
-      this.logger.info('user/cd-user/LoginComponent::ngOnInit()/this.socketData:', this.socketData);
+      this.logger.info('cd-user/LoginComponent::initialize()/this.socketData:', this.socketData);
     } else {
       this.logger.info('Err: socket data is not valid')
     }
@@ -133,23 +134,28 @@ export class LoginComponent implements OnInit {
     console.log('cd-user/LoginComponent::setAppId()/01')
     console.log('cd-user/LoginComponent::setAppId()/this.svSio.socket:', this.svSio.socket)
     localStorage.removeItem('appId');
-    localStorage.setItem('appId', this.svBase.getGuid());
+    // localStorage.setItem('appId', this.svBase.getGuid());
     const appId = localStorage.getItem('appId');
     console.log('cd-user/LoginComponent::setAppId()/appId:', appId)
     const envl: ICdPushEnvelop = this.configPushPayload('register-client', 'push-registered-client', 1000)
     console.log('cd-user/LoginComponent::setAppId()/envl:', envl)
     // this.svSio.sendPayLoad(envl)
+
+    // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu
     this.listen('push-registered-client')
-    this.listen('msg-relayed')
     this.listen('push-msg-relayed')
-    this.sendSioMessage(envl.pushData.triggerEvent, envl)
+    this.listen('push-msg-pushed')
+    this.listen('push-delivered')
+    this.listen('msg-relayed')
+    this.listen('msg-menu')
+    this.sendSioMessage(envl)
   }
 
   initSession(authData: AuthData) {
-    this.logger.info('user/cd-user/LoginComponent::initSession/01');
+    this.logger.info('cd-user/LoginComponent::initSession/01');
     this.svUser.auth$(authData).subscribe((res: any) => {
       if (res.app_state.success === true) {
-        this.logger.info('user/cd-user/LoginComponent::initSession/res:', JSON.stringify(res));
+        this.logger.info('cd-user/LoginComponent::initSession/res:', JSON.stringify(res));
         this.svSess.appState = res.app_state;
         /*
         create a session on successfull authentication.
@@ -157,31 +163,31 @@ export class LoginComponent implements OnInit {
         use renewSess(res);
         */
         if (res.app_state.sess.cd_token !== null && res.app_state.success) {
-          this.logger.info('user/cd-user/LoginComponent::initSession/02');
+          this.logger.info('cd-user/LoginComponent::initSession/02');
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
-          this.logger.info('user/cd-user/LoginComponent::initSession/envl:', envl);
+          this.logger.info('cd-user/LoginComponent::initSession/envl:', envl);
 
           if (environment.wsMode === 'sio') {
-            this.logger.info('user/cd-user/LoginComponent::initSession/envl:...using sio');
+            this.logger.info('cd-user/LoginComponent::initSession/envl:...using sio');
             // this.svSio.sendPayLoad(envl)
 
             // test sio
             // this.svSioTest.sendMessage(envl.pushData.triggerEvent, envl)
             //   .subscribe(
             //     (status) => {
-            //       console.log('user/cd-user/LoginComponent::initSession/Message sent successfully');
+            //       console.log('cd-user/LoginComponent::initSession/Message sent successfully');
             //     },
             //     (error) => {
-            //       console.error("user/cd-user/LoginComponent::initSession/error:", error);
+            //       console.error("cd-user/LoginComponent::initSession/error:", error);
             //     }
             //   );
-            this.sendSioMessage(envl.pushData.triggerEvent, envl)
+            this.sendSioMessage(envl)
 
           }
 
           if (environment.wsMode === 'wss') {
-            this.logger.info('user/cd-user/LoginComponent::initSession/envl:...using wss');
+            this.logger.info('cd-user/LoginComponent::initSession/envl:...using wss');
             this.svWss.sendMsg(envl)
           }
 
@@ -225,19 +231,34 @@ export class LoginComponent implements OnInit {
         // const payLoad: ICdPushEnvelop = JSON.parse(payLoadStr)
         console.log('cd-user/LoginComponent::pushSubscribe()/payLoad:', payLoad);
         // Handle the message payload
+        // push-msg-relayed, push-msg-pushed, push-delivered, push-registered-client, msg-relayed, push-menu 
         switch (payLoad.pushData.emittEvent) {
-          case 'push-registered-client':
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
-            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
-            console.log("handle push-registered-client event")
-            this.saveSocket(payLoad);
-            break;
           case 'push-msg-relayed':
             console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
             console.log('cd-user/LoginComponent::listenSecure()/push-msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
             console.log("handle push-msg-relayed event")
             this.updateRelayed(payLoad)
             break;
+          case 'push-msg-pushed':
+            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('cd-user/LoginComponent::listenSecure()/push-msg-pushed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-msg-pushed event")
+            this.notificationAcceptDelivery(payLoad)
+            break;
+          case 'push-delivered':
+            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('cd-user/LoginComponent::listenSecure()/push-delivered/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-delivered-client event")
+            this.notificationMsgComplete(payLoad)
+            break;
+
+          case 'push-registered-client':
+            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('cd-user/LoginComponent::listenSecure()/push-registered-client/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-registered-client event")
+            this.saveSocket(payLoad);
+            break;
+
           case 'msg-relayed':
             console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
             console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
@@ -265,10 +286,75 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  sendSioMessage(triggerEvent: string, envl: any): void {
-    this.logger.info('user/cd-user/LoginComponent::sendSioMessage/triggerEvent:', triggerEvent);
-    this.logger.info('user/cd-user/LoginComponent::sendSioMessage/envl:', envl);
-    this.svSioTest.sendMessage(triggerEvent, envl).subscribe({
+  
+
+  notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
+    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
+    console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/senderAcceptDelivery:', payLoad)
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.deliveryTime = Number(new Date());
+    payLoad.pushData.commTrack.delivered = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = 'msg-received';
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    // this.sendPayLoad(payLoad);
+    this.sendSioMessage(payLoad)
+  }
+
+  notificationMsgComplete(payLoad: ICdPushEnvelop) {
+    console.log('cdUiLib::SioClientService::notificationMsgComplete()/01')
+    console.log('cdUiLib::SioClientService::notificationMsgComplete()/1:', payLoad)
+    /**
+     * update record of payload
+     * - delivered time
+     * - delivered = true
+     * - isNotification = true
+     */
+    payLoad.pushData.commTrack.completedTime = Number(new Date());
+    payLoad.pushData.commTrack.completed = true;
+    payLoad.pushData.isNotification = true;
+    payLoad.pushData.triggerEvent = 'msg-completed'
+    console.log('cdUiLib::SioClientService::notificationMsgComplete/2:', payLoad)
+    /**
+     * reverse sender and receiver subTypeId
+     */
+    // this.sendPayLoad(payLoad);
+    this.sendSioMessage(payLoad)
+  }
+
+  // public sendPayLoad(pushEnvelope: ICdPushEnvelop) {
+  //   console.log('cdUiLib::SioClientService::sendPayLoad/01/pushEnvelope:', pushEnvelope)
+  //   if ('pushData' in pushEnvelope) {
+  //     if ('pushGuid' in pushEnvelope.pushData) {
+  //       console.log('cdUiLib::SioClientService::sendPayLoad/02/pushEnvelope:')
+  //       // every message has a unique id
+  //       // pushEnvelope.pushData.pushGuid = uuidv4();
+  //       const msg = JSON.stringify(pushEnvelope);
+  //       if (this.socket) {
+  //         this.socket.emit(pushEnvelope.pushData.triggerEvent, msg);
+  //       } else {
+  //         console.error('cdUiLib::SioClientService::sendPayLoad/error: socket is null')
+  //       }
+
+  //     } else {
+  //       console.error('cdUiLib::SioClientService::sendPayLoad/01/triggerEvent missing in payLoad.pushData')
+  //     }
+  //   } else {
+  //     console.error('cdUiLib::SioClientService::sendPayLoad/01/pushData missing in pushEnvelope')
+  //   }
+
+  // }
+
+  sendSioMessage(envl: ICdPushEnvelop): void {
+    this.logger.info('cd-user/LoginComponent::sendSioMessage/envl:', envl);
+    this.svSioTest.sendMessage(envl.pushData.triggerEvent, envl).subscribe({
       next: (response: boolean) => {
         console.log('Message sent successfully:', response);
       },
@@ -356,25 +442,26 @@ export class LoginComponent implements OnInit {
     envl.pushData.pushRecepients.push(uSender)
 
 
-    /**
-     * recepient is only used when sending message to 
-     * remote user or component.
-     * In this case we are just connecting and
-     * collecting connection info.
-     */
-    // set recepient
-    // const uRecepient: any = { ...users[0] }
-    // uRecepient.subTypeId = 7;
-    // envl.pushData.pushRecepients.push(uRecepient)
+    if (triggerEvent === 'login') {
+      this.logger.info('cd-user/LoginComponent::configPushPayload()/triggerEvent==login:');
+      // set recepient
+      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
+      this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
+      const uRecepient: any = { ...users[0] }
+      uRecepient.subTypeId = 7;
+      this.logger.info('cd-user/LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
+      uRecepient.cdObjId = this.sidebarInitData.value
+      envl.pushData.pushRecepients.push(uRecepient)
 
-    console.log('starting cd-user-v2::LoginComponent::configPushPayload()/envl:', envl);
+    }
 
+    this.logger.info('cd-user/LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
     return envl;
 
   }
 
   // configPushPayload(triggerEvent: string, emittEvent: string, cuid: number): ICdPushEnvelop {
-  //   this.logger.info('starting cd-user-v2::cd-user/LoginComponent::configPushPayload()');
+  //   this.logger.info('starting cd-user/LoginComponent::configPushPayload()');
   //   const pushEnvelope: ICdPushEnvelop = {
   //     pushData: {
   //       pushGuid: '',
@@ -446,15 +533,15 @@ export class LoginComponent implements OnInit {
 
 
   //   // set recepient
-  //   this.logger.info('cd-user-v2::cd-user/LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
-  //   this.logger.info('cd-user-v2::cd-user/LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
+  //   this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData:', JSON.stringify(this.sidebarInitData));
+  //   this.logger.info('cd-user/LoginComponent::configPushPayload()/this.sidebarInitData.value:', JSON.stringify(this.sidebarInitData.value));
   //   const uRecepient: ICommConversationSub = { ...users[0] }
   //   uRecepient.subTypeId = 7;
-  //   this.logger.info('cd-user-v2::cd-user/LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
+  //   this.logger.info('cd-user/LoginComponent::configPushPayload()/uRecepient:', JSON.stringify(uRecepient));
   //   uRecepient.cdObjId = this.sidebarInitData.value
   //   envl.pushData.pushRecepients.push(uRecepient)
 
-  //   this.logger.info('cd-user-v2::cd-user/LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
+  //   this.logger.info('cd-user/LoginComponent::configPushPayload()/envl:', JSON.stringify(envl));
 
   //   return envl;
 
@@ -501,6 +588,7 @@ export class LoginComponent implements OnInit {
 
   searchLocalStorage(f: LsFilter) {
     this.logger.info('starting cd-user/LoginComponent::searchLocalStorage()/lcLength:');
+    this.logger.info('cd-user/LoginComponent::searchLocalStorage()/f:', f);
     // const lc = { ...localStorage };
     const lcArr = [];
 
