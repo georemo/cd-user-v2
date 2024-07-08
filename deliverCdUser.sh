@@ -73,3 +73,9 @@ echo "\n----------------------------------------------------"
 echo "UPDATE REMOTE DEPLOYMENT"
 echo "----------------------------------------------------"
 sh "$PROJ_DIR/execRemote.sh"
+
+# Get the current date
+current_date=$(date +"%A, %B %d, %Y %I:%M:%S %p")
+
+# Output the current date
+echo "Current Date and Time: $current_date"

@@ -148,6 +148,7 @@ export class LoginComponent implements OnInit {
     this.listen('push-delivered')
     this.listen('msg-relayed')
     this.listen('msg-menu')
+    this.listen('push-menu')
     this.sendSioMessage(envl)
   }
 
@@ -222,6 +223,75 @@ export class LoginComponent implements OnInit {
 
   }
 
+  // const x = [
+  //   {
+  //     triggerEvent: 'register-client',
+  //     emittEvent: 'push-registered-client',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'srv-received',
+  //     emittEvent: 'push-srv-received',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-relayed',
+  //     emittEvent: 'push-msg-relayed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-pushed',
+  //     emittEvent: 'push-msg-pushed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-received',
+  //     emittEvent: 'push-delivered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'msg-completed',
+  //     emittEvent: 'push-msg-completed',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'register',
+  //     emittEvent: 'registered',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'login',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'pushEnvelop'
+  //   },
+  //   {
+  //     triggerEvent: 'send-memo',
+  //     emittEvent: 'push-memo',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-pub',
+  //     emittEvent: 'push-pub',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-react',
+  //     emittEvent: 'push-react',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-menu',
+  //     emittEvent: 'push-menu',
+  //     sFx: 'push'
+  //   },
+  //   {
+  //     triggerEvent: 'send-notif',
+  //     emittEvent: 'push-notif',
+  //     sFx: 'push'
+  //   }
+  // ]
+
+  // push-registered-client, push-srv-received, push-msg-relayed, push-msg-pushed, push-delivered, push-msg-completed, push-srv-received, registered, push-menu, push-memo
   listen(event) {
     this.logger.info('cd-shell/cd-user/LoginComponent::listen/event:', event);
     // Listen for incoming messages
@@ -264,6 +334,16 @@ export class LoginComponent implements OnInit {
             console.log('cd-user/LoginComponent::listenSecure()/msg-relayed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
             console.log("handle msg-relayed event")
             break;
+          case 'push-msg-completed':
+            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('cd-user/LoginComponent::listenSecure()/push-msg-completed/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-msg-completed event")
+            break;
+          case 'push-srv-received':
+            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
+            console.log('cd-user/LoginComponent::listenSecure()/push-srv-received/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
+            console.log("handle push-srv-received event")
+            break;
           case 'push-menu':
             console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.emittEvent:', payLoad.pushData.emittEvent)
             console.log('cd-user/LoginComponent::listenSecure()/push-menu/:payLoad.pushData.triggerEvent:', payLoad.pushData.triggerEvent)
@@ -286,7 +366,7 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  
+
 
   notificationAcceptDelivery(payLoad: ICdPushEnvelop) {
     console.log('cdUiLib::SioClientService::notificationAcceptDelivery()/01')
