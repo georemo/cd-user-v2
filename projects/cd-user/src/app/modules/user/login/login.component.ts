@@ -167,6 +167,7 @@ export class LoginComponent implements OnInit {
           this.logger.info('cd-user/LoginComponent::initSession/02');
           const envl: ICdPushEnvelop = this.configPushPayload('login', 'push-menu', res.data.userData.userId)
           envl.pushData.m = res.data.menuData;
+          envl.pushData.token= res.app_state.sess.cd_token
           this.logger.info('cd-user/LoginComponent::initSession/envl:', envl);
 
           if (environment.wsMode === 'sio') {
